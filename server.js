@@ -1,53 +1,29 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
-var app = express();
-var port = process.env.PORT || 3000;
-app.use(function (req, res, next) {
+require('dotenv').config();
 
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', '*');
+const app = express();
+const port = process.env.PORT || 3000;
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+require('./app/services/facebookJob');
+require('./app/services/instagramJob');
+require('./app/services/twitterJob');
 
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
-    next();
-});
-
-require('./app/services/v2/fb');
-require('./app/services/v2/instagram');
-require('./app/services/v2/twitter');
-
-app.get('/', (req, res)=>{
-    res.send("Unikom Sentiment Services");
-})
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('./app/routes/routes'))
-mongoose.connect('mongodb://unikom:unikom123@ds111103.mlab.com:11103/unikom-sentiment');
-const check = mongoose.connection;
+app.get('/', (req, res) => res.send("Unikom Sentiment Services"));
+app.use(require('./app/routes/routes'));
 
-check.on('error', () => {
-	console.log('Error connection');
-});
+mongoose.connect(process.env.MONGO_URL, {useMongoClient: true});
+mongoose.connection.on('error', () => console.log('Terjadi kesalahan saat membuat koneksi di MongoDB'));
+mongoose.connection.on('open', () => console.log('Berhasil membuat koneksi di MongoDB'));
 
-check.on('open', () => {
-	console.log('mongoodb is connected ..');
-});
-
-app.listen(port, ()=>{
-    console.log("Listening on 3000");
-})
+app.listen(port, () => console.log(`Listening on port ${port}`));
