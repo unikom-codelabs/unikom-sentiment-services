@@ -16,12 +16,16 @@ require('./app/services/twitterJob');
 app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('/', (req, res) => res.send("Unikom Sentiment Services"));
-app.use(require('./app/routes/routes'));
 
-mongoose.connect(process.env.MONGO_URL, {useMongoClient: true});
+app.get('/', (req, res) => res.send("Unikom Sentiment Services"));
+app.use(require('./app/routes/index'));
+
+mongoose.connect(process.env.MONGO_URL, { 
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 mongoose.connection.on('error', () => console.log('Terjadi kesalahan saat membuat koneksi di MongoDB'));
 mongoose.connection.on('open', () => console.log('Berhasil membuat koneksi di MongoDB'));
 
