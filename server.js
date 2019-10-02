@@ -11,7 +11,6 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 require('./app/services/facebookJob');
-require('./app/services/instagramJob');
 require('./app/services/twitterJob');
 
 app.use(cors());
