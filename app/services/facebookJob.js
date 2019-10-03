@@ -83,7 +83,7 @@ const getPosts = id => {
                     .then(doc => {
                       if (doc.length > 0) return onDocAlreadyExist(announcement.text);
 
-                      axios.post(`${process.env.ML_URL}/api/v1/classify`, {
+                      axios.post(`${process.env.ML_URL}/api/v1/classify', {
                           text: announcement.text
                         })
                         .then(response => {
