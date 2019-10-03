@@ -55,7 +55,7 @@ const getPosts = id => {
                 },
                 GlobalParameters: {}
               });
-              axios.post('https://unikom-sentiment.herokuapp.com/api/v1/classify', {
+              axios.post(`${process.env.ML_URL}/api/v1/classify`, {
                   text: comment.message
                 })
                 .then(response => {
@@ -83,7 +83,7 @@ const getPosts = id => {
                     .then(doc => {
                       if (doc.length > 0) return onDocAlreadyExist(announcement.text);
 
-                      axios.post('https://unikom-sentiment.herokuapp.com/api/v1/classify', {
+                      axios.post(`${process.env.ML_URL}/api/v1/classify`, {
                           text: announcement.text
                         })
                         .then(response => {

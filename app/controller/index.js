@@ -10,7 +10,7 @@ function Index(){
 		res.render('train');
 	}
 	this.postTrain = (req, res, next)=>{
-		axios.get('https://unikom-sentiment-analysis.herokuapp.com/api/v1/train')
+		axios.get(`${process.env.ML_URL}/api/v1/train`)
 		.then(function (response) {
 			res.json("success")
 		})

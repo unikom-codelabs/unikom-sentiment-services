@@ -22,7 +22,7 @@ new CronJob({
   onTick() {
     const onDocFound = text => {
       let category = '';
-      axios.post('https://unikom-sentiment.herokuapp.com/api/v1/classify', {text})
+      axios.post(`${process.env.ML_URL}/api/v1/classify`, {text})
           .then(response => {
             const hasil = response.data.result;
             if (hasil.length > 1) {
@@ -60,7 +60,7 @@ new CronJob({
 const classifyTextAndSaved = (message, tweet) => {
   console.log(message);
   console.log(tweet.text);
-  axios.post('https://unikom-sentiment.herokuapp.com/api/v1/classify', {
+  axios.post(`${process.env.ML_URL}/api/v1/classify`, {
     text: tweet.text
   })
       .then(response => {
